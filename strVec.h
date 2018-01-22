@@ -22,7 +22,7 @@ public:
 
     void reserve(size_t new_cap);
     void resize(size_t count);
-    void resize(size_t count, const T&);
+    void resize(size_t count, const T &t);
 private:
     static std::allocator<T> alloc;
     void chk_n_alloc() { if (size() == capacity()) reallocate(); }
