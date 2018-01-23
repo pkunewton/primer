@@ -54,13 +54,39 @@ T& Blob<T>::operator[](size_type i) {
 }
 
 template <typename T>
-T& Blob<T>::operator[](size_type i) {
+const T& Blob<T>::operator[](size_type i) const {
     check(i, "subscript out of range");
     return (*data)[i];
 }
 
 template <typename T>
-const T& Blob<T>::operator[](size_type i) const {
-    check(i, "subscript out of range");
-    return (*data)[i];
+BlobPtr<T>::BlobPtr(Blob<T> &a, size_t sz):
+        wptr(a.data), curr(sz) { }
+
+template <typename T>
+BlobPtr<T>& BlobPtr<T>::operator++() {
+    check(curr, "increment past end of blob");
+    ++curr;
+    return *this;
+}
+
+template <typename T>
+BlobPtr<T>& BlobPtr<T>::operator++(int) {
+    BlobPtr<T> ret = *this;
+    ++*this;
+    return ret;
+}
+
+template <typename T>
+BlobPtr<T>& BlobPtr<T>::operator--() {
+    --curr;
+    check(curr, "decrement past begin of blob");
+    return *this;
+}
+
+template <typename T>
+BlobPtr<T>& BlobPtr<T>::operator--(int) {
+    BlobPtr<T> ret = *this;
+    --*this;
+    return ret;
 }

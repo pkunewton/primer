@@ -2,6 +2,7 @@
 // Created by Administrator on 2018/1/22.
 //
 #include "mail.h"
+#include <iostream>
 
 Message::Message(const Message &m):
         content(m.content), folders(m.folders) {
@@ -41,6 +42,11 @@ void Message::remove_from_Folders() {
         f->removeMsg(this);
     }
 }
+
+void Message::print_debug() {
+    std::cout << content << std::endl;
+}
+
 void swap(Message &lhs, Message &rhs) {
     using std::swap;
     for(auto f : lhs.folders){
@@ -101,4 +107,11 @@ void swap(Folder &lhs, Folder &rhs) {
     for(auto m : rhs.messages) {
         m->addFolder(&rhs);
     }
+}
+
+void Folder::print_debug() {
+    for(auto m : messages){
+        std::cout << m->content << "  ";
+    }
+    std::cout << std::endl;
 }

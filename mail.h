@@ -9,6 +9,10 @@
 #include <set>
 
 class Folder;
+class Message;
+
+void swap(Message&, Message&);
+void swap(Folder&, Folder&);
 
 class Message {
     friend void swap(Message&, Message&);
@@ -34,8 +38,6 @@ private:
     void removeFolder(Folder *f) { folders.erase(f); };
 };
 
-void swap(Message&, Message&);
-
 class Folder {
     friend void swap(Message&, Message&);
     friend void swap(Folder&, Folder&);
@@ -56,6 +58,5 @@ private:
     void removeMsg(Message *m) { messages.erase(m); };
 };
 
-void swap(Folder&, Folder&);
 
 #endif //PRIMER_MAIL_H
