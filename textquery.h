@@ -27,25 +27,30 @@ class TextQuery {
 public:
     using line_no = std::vector<std::string>::size_type;
 //    typedef std::vector<std::string>::size_type line_no;
-    TextQuery(std::ifstream);
+    TextQuery(std::ifstream&);
     QueryResult query(const std::string &s) const ;
 private:
     std::shared_ptr<std::vector<std::string>> file;
-    std::map<std::string, std::shared_ptr<set<line_no>> word_map;
+    std::map<std::string, std::shared_ptr<std::set<line_no >>> word_map;
 };
 
 class QueryResult {
-    friend std::ostream& print(std::ostream&, QueryResult&);
+    friend std::ostream& print(std::ostream&, const QueryResult&);
 public:
-    QueryResult();
+    QueryResult(const std::string &sought, std::shared_ptr<std::set<TextQuery::line_no >> sp_lines,
+                std::shared_ptr<std::vector<std::string>> file): sought(sought), sp_lines(sp_lines), file(file) { }
+
+    const std::shared_ptr<std::vector<std::string>> get_file() const { return file; }
+    std::set<TextQuery::line_no >::iterator
+    begin() { return sp_lines->begin(); }
+    std::set<TextQuery::line_no >::iterator
+    end() { return sp_lines->end(); }
 private:
     std::string sought;
     std::shared_ptr<std::set<TextQuery::line_no >> sp_lines;
-    BlobPtr<std::string> file;
+    std::shared_ptr<std::vector<std::string>> file;
 };
 
-std::ostream& print(std::ostream&, QueryResult&);
-
-
+std::ostream& print(std::ostream&, const QueryResult&);
 
 #endif //PRIMER_TEXTQUERY_H
