@@ -1,5 +1,5 @@
 //
-// Created by Administrator on 2018/1/23 0023.
+// Created by LiuKe on 2018/1/23 0023.
 //
 
 #ifndef PRIMER_TEXTQUERY_H
@@ -52,5 +52,43 @@ private:
 };
 
 std::ostream& print(std::ostream&, const QueryResult&);
+
+class Query {
+    friend Query operator~(const Query&);
+public:
+    Query(const std::string&);
+private:
+    std::shared_ptr<Query_Base> q;
+};
+
+class Query_Base {
+    friend class Query;
+public:
+    using line_no = std::vector<std::string>::size_type;
+    virtual ~Query_Base() = default;
+private:
+    virtual QueryResult eval(const TextQuery&) const = 0;
+    virtual std::string rep() const = 0;
+};
+
+class WordQuery : public Query_Base {
+
+};
+
+class NotQuery : public Query_Base {
+
+};
+
+class BinaryQuery : public Query_Base {
+
+};
+
+class AndQuery : public BinaryQuery {
+
+};
+
+class OrQuery : public BinaryQuery {
+
+};
 
 #endif //PRIMER_TEXTQUERY_H
