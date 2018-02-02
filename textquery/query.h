@@ -6,6 +6,10 @@
 #define PRIMER_QUERY_H
 
 #include "textquery.h"
+#include "query_base.h"
+#include "wordquery.h"
+
+using std::cout;
 
 class Query {
     friend Query operator~(const Query&);
@@ -23,5 +27,10 @@ private:
 // Query 类的构造函数，指向一个WordQuery对象
 inline Query::Query(const std::string &s):
         q(std::shared_ptr<Query_Base>(new WordQuery(s))){ }
+
+// 输出 Query 查询的内容
+inline std::ostream &operator<<(std::ostream &os, const Query &query){
+    return cout << query.rep();
+}
 
 #endif //PRIMER_QUERY_H

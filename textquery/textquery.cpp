@@ -46,7 +46,4 @@ std::ostream &print(std::ostream &os, const QueryResult &qr){
     }
 }
 
-// 输出 Query 查询的内容
-std::ostream &operator<<(std::ostream &os, const Query &query){
-    return cout << query.rep();
-}
+

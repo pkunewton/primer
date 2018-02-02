@@ -12,8 +12,7 @@
 #include <set>
 #include <iostream>
 #include <fstream>
-#include "Blob.h"
-#include "query.h"
+#include "../blob.h"
 
 class QueryResult;
 
@@ -46,50 +45,5 @@ private:
 };
 
 std::ostream& print(std::ostream&, const QueryResult&);
-
-class Query_Base {
-    friend class Query;
-public:
-    using line_no = std::vector<std::string>::size_type;
-    virtual ~Query_Base() = default;
-private:
-    virtual QueryResult eval(const TextQuery&) const = 0;
-    virtual std::string rep() const = 0;
-};
-
-class WordQuery : public Query_Base {
-    friend class Query;
-    WordQuery(const std::string &s): query_word(s) { }
-    QueryResult eval(const TextQuery &t) const override {
-        t.query(query_word);
-    }
-    std::string rep() const  override { return query_word; }
-    std::string query_word;
-};
-
-
-class NotQuery : public Query_Base {
-    friend Query operator~(const Query&);
-    NotQuery(const Query &q): query(q) { }
-    std::string rep() const override { return  "~(" + query.rep() + ")"; }
-    QueryResult eval(const TextQuery &t) const ;
-    Query query;
-};
-
-inline Query operator~(const Query &oprand){
-    return std::shared_ptr<Query_Base>(new NotQuery(oprand));
-}
-
-class BinaryQuery : public Query_Base {
-
-};
-
-class AndQuery : public BinaryQuery {
-
-};
-
-class OrQuery : public BinaryQuery {
-
-};
 
 #endif //PRIMER_TEXTQUERY_H
