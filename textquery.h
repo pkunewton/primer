@@ -13,15 +13,9 @@
 #include <iostream>
 #include <fstream>
 #include "Blob.h"
+#include "query.h"
 
 class QueryResult;
-class Query;
-class Query_Base;
-class OrQuery;
-class AndQuery;
-class BinaryQuery;
-class NotQuery;
-class WordQuery;
 
 class TextQuery {
 public:
@@ -53,14 +47,6 @@ private:
 
 std::ostream& print(std::ostream&, const QueryResult&);
 
-class Query {
-    friend Query operator~(const Query&);
-public:
-    Query(const std::string&);
-private:
-    std::shared_ptr<Query_Base> q;
-};
-
 class Query_Base {
     friend class Query;
 public:
@@ -72,12 +58,27 @@ private:
 };
 
 class WordQuery : public Query_Base {
-
+    friend class Query;
+    WordQuery(const std::string &s): query_word(s) { }
+    QueryResult eval(const TextQuery &t) const override {
+        t.query(query_word);
+    }
+    std::string rep() const  override { return query_word; }
+    std::string query_word;
 };
+
 
 class NotQuery : public Query_Base {
-
+    friend Query operator~(const Query&);
+    NotQuery(const Query &q): query(q) { }
+    std::string rep() const override { return  "~(" + query.rep() + ")"; }
+    QueryResult eval(const TextQuery &t) const ;
+    Query query;
 };
+
+inline Query operator~(const Query &oprand){
+    return std::shared_ptr<Query_Base>(new NotQuery(oprand));
+}
 
 class BinaryQuery : public Query_Base {
 
