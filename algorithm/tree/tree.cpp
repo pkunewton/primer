@@ -6,14 +6,14 @@
 #include "tree.h"
 
 SearchTree createTreeNode(ElementType element){
-    SearchTree tree = (SearchTree)std::malloc(sizeof(struct TreeNode));
+    SearchTree tree = (SearchTree)malloc(sizeof(struct TreeNode));
     if (tree != NULL) {
         tree->element= element;
         tree->left = NULL;
         tree->right = NULL;
         return tree;
     } else {
-        std::free(tree);
+        free(tree);
     }
     return NULL;
 }
@@ -22,7 +22,7 @@ SearchTree makeEmpty(SearchTree tree){
     if (tree != NULL){
         makeEmpty(tree->left);
         makeEmpty(tree->right);
-        std::free(tree);
+        free(tree);
     }
 }
 
