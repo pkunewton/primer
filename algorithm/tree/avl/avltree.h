@@ -7,18 +7,18 @@
 typedef int ElementType;
 
 struct AvlTreeNode;
-typedef struct AvlTreeNode *Positon;
+typedef struct AvlTreeNode *Position;
 typedef struct AvlTreeNode *AvlTree;
 
 //extern "C" {
     AvlTree createAvlTree(ElementType element);
     AvlTree makeEmpty(AvlTree tree);
-    Positon find(ElementType element, AvlTree tree);
-    Positon findMin(AvlTree tree);
-    Positon findMax(AvlTree tree);
+    Position find(ElementType element, AvlTree tree);
+    Position findMin(AvlTree tree);
+    Position findMax(AvlTree tree);
     AvlTree insertElement(ElementType element, AvlTree tree);
     AvlTree deleteElement(ElementType element, AvlTree tree);
-    ElementType retrieve(Positon positon);
+    ElementType retrieve(Position positon);
 //}
 
 #endif //PRIMER_AVLTREE_H

@@ -36,7 +36,7 @@ AvlTree makeEmpty(AvlTree tree){
     return NULL;
 }
 
-Positon find(ElementType element, AvlTree tree){
+Position find(ElementType element, AvlTree tree){
     if (tree == NULL)
         return NULL;
     if (element < tree->element)
@@ -47,7 +47,27 @@ Positon find(ElementType element, AvlTree tree){
         return tree;
 }
 
-static int Height(Positon positon){
+Position findMin(AvlTree tree) {
+    if(tree == NULL){
+        return NULL;
+    } else if (tree->left == NULL){
+        return tree;
+    } else{
+        return findMin(tree->left);
+    }
+}
+
+Position findMax(AvlTree tree){
+    if (tree == NULL){
+        return NULL;
+    } else if (tree->right == NULL){
+        return tree;
+    } else{
+        return findMax(tree->right);
+    }
+}
+
+static int Height(Position positon){
     if (positon == NULL)
         return -1;
     return positon->height;
@@ -62,8 +82,8 @@ static int Max(int lhs, int rhs){
  *           K1     Z       ===>       X     K2
  *        X     Y                           Y     Z
  */
-static Positon singleRotateWithLeft(Positon K2){
-    Positon K1 = K2->left;
+static Position singleRotateWithLeft(Position K2){
+    Position K1 = K2->left;
     K2->left = K1->right;
     K1->right = K2;
 
@@ -72,8 +92,8 @@ static Positon singleRotateWithLeft(Positon K2){
     return K1;
 }
 
-static Positon singleRotateWithRight(Positon K1){
-    Positon K2 = K1->right;
+static Position singleRotateWithRight(Position K1){
+    Position K2 = K1->right;
     K1->right = K2->left;
     K2->left = K1;
 
@@ -88,14 +108,14 @@ static Positon singleRotateWithRight(Positon K1){
  *        a    k2                   k1    c                 a   b   c   d
  *           b    c               a    b
  */
-static Positon doubleRotateWithLeft(Positon K3){
-    Positon K2 = singleRotateWithRight(K3->left);
+static Position doubleRotateWithLeft(Position K3){
+    Position K2 = singleRotateWithRight(K3->left);
     K3->left = K2;
     return singleRotateWithLeft(K3);
 }
 
-static Positon doubleRotateWithRight(Positon K1){
-    Positon K2 = singleRotateWithRight(K1->right);
+static Position doubleRotateWithRight(Position K1){
+    Position K2 = singleRotateWithRight(K1->right);
     K1->right = K2;
     return singleRotateWithLeft(K1);
 }
@@ -127,5 +147,50 @@ AvlTree insertElement(ElementType element, AvlTree tree){
 }
 
 AvlTree deleteElement(ElementType element, AvlTree tree){
+    if (tree == NULL){
+        return NULL;
+    } else if (element == tree->element) {
+        if (tree->left == NULL && tree->right == NULL){
+            std::free(tree);
+            tree = NULL;
+        } else {
+            // 删除的不是叶节点
+            if (Height(tree->left) > Height(tree->right)) {
+                Position max = findMax(tree->left);
+                tree->left = deleteElement(retrieve(max), tree->left);
+                max->left = tree->left;
+                max->right = tree->right;
+                std::free(tree);
+                tree = max;
+            } else {
+                Position min = findMin(tree->right);
+                tree->right = deleteElement(retrieve(min), tree->right);
+                min->left = tree->left;
+                min->right = tree->right;
+                std::free(tree);
+                tree = min;
+            }
+        }
+    } else if (element < tree->element) {
+        tree->left = deleteElement(element, tree->left);
+        if (Height(tree->right) - Height(tree->left) == 2){
+            if (Height(tree->right->right) > Height(tree->right->left)){
+                tree = singleRotateWithRight(tree);
+            } else {
+                tree = doubleRotateWithRight(tree);
+            }
+        }
+    } else if (element > tree->element) {
+        tree->right = deleteElement(element, tree->right);
+        if (Height(tree->left) - Height(tree->right) == 2) {
+            if (Height(tree->left->left) > Height(tree->left->right)) {
+                tree = singleRotateWithLeft(tree);
+            } else {
+                tree = doubleRotateWithLeft(tree);
+            }
+        }
+    }
 
+    tree->height = Max(Height(tree->left), Height(tree->right)) + 1;
+    return tree;
 }
