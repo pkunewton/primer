@@ -194,3 +194,7 @@ AvlTree deleteElement(ElementType element, AvlTree tree){
     tree->height = Max(Height(tree->left), Height(tree->right)) + 1;
     return tree;
 }
+
+ElementType retrieve(Position position){
+    return position->element;
+}
